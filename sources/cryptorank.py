@@ -1,18 +1,48 @@
 import requests
 from bs4 import BeautifulSoup
 
-KEYWORDS = [
-    "testnet",
-    "points",
-    "reward",
-    "social",
-    "liquidity",
-    "hold",
-    "nft",
-    "role",
-]
+KEYWORDS = {
+    "testnet": 50,
+    "galxe": 20,
+    "quest": 20,
+    "discord": 10,
+    "twitter": 10,
+    "social": 10,
+    "faucet": 20,
+    "swap": 20,
+    "liquidity": 30,
+    "bridge": 30,
+    "stake": 30,
+    "hold": 10,
+}
 
+def get_detail_info(url):
 
+    html = requests.get(
+        url,
+        headers=HEADERS,
+        timeout=30
+    ).text.lower()
+
+    score = 0
+    tags = []
+
+    for word, pts in KEYWORDS.items():
+
+        count = html.count(word)
+
+        if count > 0:
+
+            tags.append(
+                word.upper()
+            )
+
+            score += pts
+
+    return {
+        "tags": tags,
+        "extra_score": score
+    }
 def get_detail_tags(url):
 
     try:
