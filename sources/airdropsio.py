@@ -22,7 +22,40 @@ def parse_date(value):
     except Exception:
         return None
 
+def filter_items(items):
+    result = []
 
+    for item in items:
+
+        title = item["title"].lower()
+
+        keywords = [
+            "testnet",
+            "points",
+            "reward",
+            "campaign",
+            "quest",
+        ]
+
+        if any(k in title for k in keywords):
+            result.append(item)
+            continue
+
+        temp = item["temperature"]
+
+        try:
+            score = int(
+                temp.replace("°", "")
+            )
+
+            if score >= 100:
+                result.append(item)
+
+        except:
+            pass
+
+    return result
+    
 def scrape_airdropsio():
 
     response = requests.get(
