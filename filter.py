@@ -16,6 +16,13 @@ def calculate_score(item):
         "action",
         ""
     ).lower()
+    
+    tags = " ".join(
+        item.get(
+            "tags",
+            []
+        )
+    ).lower()
 
     temp = item.get(
         "temperature",
@@ -47,6 +54,8 @@ def calculate_score(item):
         title
         + " "
         + action
+        + " "
+        + tags
     )
 
     if "testnet" in keywords:
