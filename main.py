@@ -84,12 +84,12 @@ def main():
         f"total scraped: {len(items)}"
     )
     items = filter_airdrops(
-    items
-)
-
-print(
-    f"after filter: {len(items)}"
-)
+        items
+    )
+    
+    print(
+        f"after filter: {len(items)}"
+    )
     new_items = []
 
     for item in items:
