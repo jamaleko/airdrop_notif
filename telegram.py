@@ -49,7 +49,7 @@ def send_message(
 
     url = (
         f"https://api.telegram.org"
-        f"/bot{8934091180:AAGN0FcUM-LgyYvpHnlGlMBz6UBpQCQD57s}"
+        f"/bot{token}"
         f"/sendMessage"
     )
 
