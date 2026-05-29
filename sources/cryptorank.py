@@ -1,6 +1,47 @@
 import requests
 from bs4 import BeautifulSoup
 
+KEYWORDS = [
+    "testnet",
+    "points",
+    "reward",
+    "social",
+    "liquidity",
+    "hold",
+    "nft",
+    "role",
+]
+
+
+def get_detail_tags(url):
+
+    try:
+
+        html = requests.get(
+            url,
+            headers={
+                "User-Agent":
+                "Mozilla/5.0"
+            },
+            timeout=30,
+        ).text.lower()
+
+        tags = []
+
+        for keyword in KEYWORDS:
+
+            if keyword in html:
+                tags.append(
+                    keyword.upper()
+                )
+
+        return list(
+            set(tags)
+        )
+
+    except:
+
+        return []
 
 def scrape_cryptorank():
 
