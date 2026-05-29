@@ -49,7 +49,7 @@ def scrape_cryptorank():
     return result
 
 
-if name == "main":
+if name == "__main__":
 
     items = scrape_cryptorank()
 
