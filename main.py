@@ -25,24 +25,28 @@ def chunk_list(data, size):
 
 def build_batch_message(items):
 
-    text = (
-        "🔥 AIRDROP UPDATE\n\n"
-    )
+    text = "🔥 AIRDROP UPDATE\n\n"
 
-    for i, item in enumerate(
-        items,
-        1
-    ):
+    for i, item in enumerate(items, 1):
+
+        tag_text = ""
+
+        if item.get("tags"):
+
+            tag_text = (
+                "🏷️ "
+                + ", ".join(
+                    item["tags"]
+                )
+                + "\n"
+            )
 
         text += (
-            f"{i}. "
-            f"{item['title']}\n"
-            f"⭐ Score: "
-            f"{item['score']}\n"
-            f"🏷️ "
-            f"{item['source']}\n"
-            f"🔗 "
-            f"{item['link']}\n\n"
+            f"{i}. {item['title']}\n"
+            f"⭐ Score: {item['score']}\n"
+            f"{tag_text}"
+            f"📦 {item['source']}\n"
+            f"🔗 {item['link']}\n\n"
         )
 
     return text
