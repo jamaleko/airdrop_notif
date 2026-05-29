@@ -1,0 +1,4 @@
+# config.py
+
+BOT_TOKEN = "8934091180:AAGN0FcUM-LgyYvpHnlGlMBz6UBpQCQD57s"
+CHANNEL_ID = "@aridrol"
