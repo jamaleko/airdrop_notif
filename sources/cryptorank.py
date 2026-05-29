@@ -81,10 +81,15 @@ def scrape_cryptorank():
             + a["href"]
         )
 
+        tags = get_detail_tags(
+            link
+        )
+        
         result.append({
             "title": title,
             "link": link,
             "source": "CryptoRank",
+            "tags": tags,
         })
 
     return result
