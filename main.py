@@ -1,6 +1,8 @@
 from sources.airdropsio import scrape_airdropsio
 from sources.cryptorank import scrape_cryptorank
-
+from filter import (
+    filter_airdrops
+)
 from telegram import (
     send_message,
     load_seen,
@@ -23,17 +25,27 @@ def chunk_list(data, size):
 
 def build_batch_message(items):
 
-    text = "🔥 AIRDROP UPDATE\n\n"
+    text = (
+        "🔥 AIRDROP UPDATE\n\n"
+    )
 
-    for i, item in enumerate(items, 1):
+    for i, item in enumerate(
+        items,
+        1
+    ):
 
         text += (
-            f"{i}. {item['title']}\n"
-            f"🏷️ {item['source']}\n"
-            f"🔗 {item['link']}\n\n"
+            f"{i}. "
+            f"{item['title']}\n"
+            f"⭐ Score: "
+            f"{item['score']}\n"
+            f"🏷️ "
+            f"{item['source']}\n"
+            f"🔗 "
+            f"{item['link']}\n\n"
         )
 
-    return text.strip()
+    return text
 
 
 def main():
@@ -71,7 +83,13 @@ def main():
     print(
         f"total scraped: {len(items)}"
     )
+    items = filter_airdrops(
+    items
+)
 
+print(
+    f"after filter: {len(items)}"
+)
     new_items = []
 
     for item in items:
