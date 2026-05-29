@@ -1,30 +1,78 @@
 from sources.airdropsio import scrape_airdropsio
 from sources.cryptorank import scrape_cryptorank
 
-from telegram import send_message
-from telegram import load_seen
-from telegram import save_seen
-from telegram import build_message
+from telegram import (
+    send_message,
+    load_seen,
+    save_seen,
+)
 
-from config import BOT_TOKEN
-from config import CHANNEL_ID
+from config import (
+    BOT_TOKEN,
+    CHANNEL_ID,
+)
+
+import time
+
+
+def chunk_list(data, size):
+
+    for i in range(0, len(data), size):
+        yield data[i:i + size]
+
+
+def build_batch_message(items):
+
+    text = "🔥 AIRDROP UPDATE\n\n"
+
+    for i, item in enumerate(items, 1):
+
+        text += (
+            f"{i}. {item['title']}\n"
+            f"🏷️ {item['source']}\n"
+            f"🔗 {item['link']}\n\n"
+        )
+
+    return text.strip()
 
 
 def main():
+
+    print("loading seen.json...")
 
     seen = load_seen()
 
     items = []
 
-    items.extend(
-        scrape_airdropsio()
+    print("scraping airdrops.io...")
+
+    try:
+        items.extend(
+            scrape_airdropsio()
+        )
+    except Exception as e:
+        print(
+            "airdrops.io error:",
+            e
+        )
+
+    print("scraping cryptorank...")
+
+    try:
+        items.extend(
+            scrape_cryptorank()
+        )
+    except Exception as e:
+        print(
+            "cryptorank error:",
+            e
+        )
+
+    print(
+        f"total scraped: {len(items)}"
     )
 
-    items.extend(
-        scrape_cryptorank()
-    )
-
-    sent = 0
+    new_items = []
 
     for item in items:
 
@@ -33,7 +81,32 @@ def main():
         if link in seen:
             continue
 
-        msg = build_message(item)
+        seen[link] = True
+
+        new_items.append(item)
+
+    print(
+        f"new items: {len(new_items)}"
+    )
+
+    if not new_items:
+
+        print(
+            "no new airdrops"
+        )
+
+        return
+
+    batch_count = 0
+
+    for batch in chunk_list(
+        new_items,
+        10,
+    ):
+
+        msg = build_batch_message(
+            batch
+        )
 
         try:
 
@@ -43,14 +116,14 @@ def main():
                 msg,
             )
 
-            seen[link] = True
-
-            sent += 1
+            batch_count += 1
 
             print(
-                "sent:",
-                item["title"]
+                f"batch {batch_count} sent "
+                f"({len(batch)} items)"
             )
+
+            time.sleep(1)
 
         except Exception as e:
 
@@ -62,7 +135,10 @@ def main():
     save_seen(seen)
 
     print(
-        f"new sent: {sent}"
+        f"done. "
+        f"{len(new_items)} new items "
+        f"sent in "
+        f"{batch_count} batches"
     )
 
 
