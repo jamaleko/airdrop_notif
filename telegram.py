@@ -1,6 +1,46 @@
 import requests
 
+import json
 
+
+def load_seen():
+
+    try:
+
+        with open(
+            "seen.json",
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            return json.load(f)
+
+    except:
+
+        return {}
+
+
+def save_seen(data):
+
+    with open(
+        "seen.json",
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            data,
+            f,
+            indent=2,
+        )
+def build_message(item):
+
+    return (
+        f"🔥 AIRDROP BARU\n\n"
+        f"📛 {item['title']}\n\n"
+        f"🏷️ {item['source']}\n\n"
+        f"🔗 {item['link']}"
+    )
 def send_message(
     token,
     chat_id,
